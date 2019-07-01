@@ -43,6 +43,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
 
   data () {
@@ -81,6 +83,22 @@ export default {
             let userComment = this.form.yourName + '-' + this.form.position + '-' + this.form.desc
             // push the comments
             this.comments.push(userComment)
+            
+            // import axios to make api calls
+            axios 
+            // 链接到firebase，进入data.json, 加载comments
+            .put("https://web-midterm.firebaseio.com/data.json", this.comments)
+            // 检测如果 .put 通过的话，运行.then
+            .then(response => {
+                console.log(response);
+                console.log("Your data was saved status:" + response.status)
+            })
+            // 检测如果 .put 没有通过的话，运行.catch
+            .catch(error => {
+                console.log(error);
+            })
+
+
             // reset the form
             this.$refs[form].resetFields();
           } else {
@@ -89,8 +107,26 @@ export default {
           }    
         });
       },
-    }
+    },
 
+// created is a life cycle hook which will run when the instance is created
+    created() {
+        
+    // here we are making a GET request using AXIOS to get the data
+    axios
+      .get("https://web-midterm.firebaseio.com/data.json")
+      .then(response => {
+        // console.log(response);
+        // console.log(response.data);
+        // Checking if the response has some data
+        if (response.data) {
+          this.comments = response.data;
+        }
+      })
+      .catch(error => {
+        console.log("There was an error in getting data: " + error.response);
+      });
+  }
 }
 </script>
 
