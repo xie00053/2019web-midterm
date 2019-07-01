@@ -1,16 +1,8 @@
 <template>
   <div class="testimonials">
 
-    <!-- 将每次上传的comment打印到页面 loop comments-->
-    <div class="list-group">
-      <el-row :gutter="12" >
-        <el-col :span="12" v-for="(comment,index) in comments" :key="index">
-          <el-card shadow="always">            
-              <span>{{comment}}</span>
-          </el-card>
-        </el-col>
-      </el-row>
-    </div>
+    <!-- loop comments 将每次上传的comment打印到页面 -->
+    <CommentLoop :commentsList="comments" @removeComment="appDeleteTodo"/>
 
 
     <!-- the form start from here -->
@@ -43,9 +35,15 @@
 </template>
 
 <script>
+// import component CommentLoop
+import CommentLoop from "@/components/CommentLoop.vue";
 import axios from 'axios'
 
 export default {
+
+  components: {
+    CommentLoop,
+  },
 
   data () {
     return {    
@@ -54,11 +52,12 @@ export default {
           position: null,
           desc: null,  
         },
+
         comments:[],
 
         // Rules for the form:--------
-        // first name, last name, email, position can not be empty;
-        // email should have the correct format; position can not more than 30 words.
+        // name, position, comment desc can not be empty;
+        // name, position title can not more than 30 words, comment desc can not more than 120 words.
         rules: {
           yourName:[
             {required: true, message: 'Please input Frist Name', trigger: 'blur'},
@@ -76,56 +75,68 @@ export default {
     };
   },
 
+
   methods: {
-      submitForm(form) {
-        this.$refs[form].validate((valid) => {
-          if (valid) {
-            let userComment = this.form.yourName + '-' + this.form.position + '-' + this.form.desc
-            // push the comments
-            this.comments.push(userComment)
-            
-            // import axios to make api calls
-            axios 
-            // 链接到firebase，进入data.json, 加载comments
-            .put("https://web-midterm.firebaseio.com/data.json", this.comments)
-            // 检测如果 .put 通过的话，运行.then
-            .then(response => {
-                console.log(response);
-                console.log("Your data was saved status:" + response.status)
-            })
-            // 检测如果 .put 没有通过的话，运行.catch
-            .catch(error => {
-                console.log(error);
-            })
-
-
-            // reset the form
-            this.$refs[form].resetFields();
-          } else {
-            console.log('error submit!!');
-            return false;
-          }    
-        });
-      },
+        
+    appDeleteTodo(index) {
+      // 每次删除一个list
+      this.comments.splice(index, 1);
+        axios.put(
+        "https://vue-and-axios.firebaseio.com/data.json",
+        this.comments
+        );
     },
 
-// created is a life cycle hook which will run when the instance is created
-    created() {
-        
-    // here we are making a GET request using AXIOS to get the data
-    axios
-      .get("https://web-midterm.firebaseio.com/data.json")
-      .then(response => {
-        // console.log(response);
-        // console.log(response.data);
-        // Checking if the response has some data
-        if (response.data) {
-          this.comments = response.data;
-        }
-      })
-      .catch(error => {
-        console.log("There was an error in getting data: " + error.response);
+    submitForm(form) {
+      this.$refs[form].validate((valid) => {
+        if (valid) {
+          let userComment = this.form.yourName + '-' + this.form.position + '-' + this.form.desc
+          // push the comments
+          this.comments.push(userComment)
+          
+          // import axios to make api calls
+          axios 
+          // 链接到firebase，进入data.json, 加载comments
+          .put("https://xie00053-vue-and-axios.firebaseio.com/data.json", this.comments)
+          // 检测如果 .put 通过的话，运行.then
+          .then(response => {
+              console.log(response);
+              console.log("Your data was saved status:" + response.status)
+          })
+
+          // 检测如果 .put 没有通过的话，运行.catch
+          .catch(error => {
+              console.log(error);
+          })
+
+
+          // reset the form
+          this.$refs[form].resetFields();
+        } else {
+          console.log('error submit!!');
+          return false;
+        }    
       });
+    },
+  },
+
+// created is a life cycle hook which will run when the instance is created
+  created() {
+      
+  // here we are making a GET request using AXIOS to get the data
+  axios
+    .get("https://xie00053-vue-and-axios.firebaseio.com//data.json")
+    .then(response => {
+      // console.log(response);
+      // console.log(response.data);
+      // Checking if the response has some data
+      if (response.data) {
+        this.comments = response.data;
+      }
+    })
+    .catch(error => {
+      console.log("There was an error in getting data: " + error.response);
+    });
   }
 }
 </script>
@@ -137,6 +148,11 @@ export default {
   }
   .el-row{
     margin-bottom: 1.5rem;
+  }
+
+  .el-card {
+    margin-bottom: 1.5rem;
+    background-color: #ffffff;
   }
 </style>
 
