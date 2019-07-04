@@ -2,20 +2,20 @@
   <div class="about">
     <h1>{{ title }}</h1>
     <el-row>
-      <el-col :span="6">
-        <img alt="Vue logo" src="../assets/logo.png" />
+      <el-col :span="8">
+        <img alt="Vue logo" src="../assets/logo1.jpg" />
       </el-col>
-      <el-col :span="18">
+      <el-col :span="16">
         <p>{{ aboutP1 }}</p>
       </el-col>
     </el-row>
 
     <el-row>
-      <el-col :span="18">
+      <el-col :span="16">
         <p>{{ aboutP2 }}</p>
       </el-col>
-      <el-col :span="6">
-        <img alt="Vue logo" src="../assets/logo.png" />
+      <el-col :span="8">
+        <img alt="Vue logo" src="../assets/logo1.jpg" />
       </el-col>
     </el-row>
 
@@ -36,3 +36,11 @@ export default {
   
 };
 </script>
+
+<style>
+.about img{
+  width:80%;
+  margin-bottom: 1.5rem;
+}
+</style>
+

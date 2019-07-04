@@ -12,17 +12,17 @@
         <el-row>          
           <!-- First Name -->
           <el-form-item prop="yourName">
-            <el-input placeholder="Your Name" v-model="form.yourName"></el-input>
+            <el-input placeholder="Your Name (no more than 50 words)" v-model="form.yourName"></el-input>
           </el-form-item>
           
           <!-- position Title -->
           <el-form-item prop="position">
-            <el-input placeholder="Position Title (no more than 30 words)" v-model="form.position"></el-input>
+            <el-input placeholder="Position Title (no more than 50 words)" v-model="form.position"></el-input>
           </el-form-item>
           
           <!-- Description -->
           <el-form-item prop="desc">
-            <el-input type="textarea" placeholder="Your Comments" v-model="form.desc"></el-input>
+            <el-input type="textarea" placeholder="Your Comments (no more than 50 words)" v-model="form.desc"></el-input>
           </el-form-item>
         </el-row>
       </el-form>
@@ -52,7 +52,6 @@ export default {
           position: null,
           desc: null,  
         },
-
         comments:[],
 
         // Rules for the form:--------
@@ -61,11 +60,11 @@ export default {
         rules: {
           yourName:[
             {required: true, message: 'Please input Frist Name', trigger: 'blur'},
-            { min:0, max: 30, message: 'You name cannot be more than 30 words', trigger: ['blur', 'change'] }
+            { min:0, max: 50, message: 'You name cannot be more than 50 words', trigger: ['blur', 'change'] }
           ],
           position:[
             { required: true, message: 'Please input the position', trigger: 'blur' },
-            { min:0, max: 30, message: 'Position title cannot be more than 30 words', trigger: ['blur', 'change'] }
+            { min:0, max: 50, message: 'Position title cannot be more than 50 words', trigger: ['blur', 'change'] }
           ],
           desc:[
             { required: true, message: 'Please input the comment', trigger: 'blur' },
@@ -79,7 +78,7 @@ export default {
   methods: {
         
     appDeleteTodo(index) {
-      // 每次删除一个list
+      // delete comment card
       this.comments.splice(index, 1);
         axios.put(
         "https://vue-and-axios.firebaseio.com/data.json",
@@ -90,7 +89,7 @@ export default {
     submitForm(form) {
       this.$refs[form].validate((valid) => {
         if (valid) {
-          let userComment = this.form.yourName + '-' + this.form.position + '-' + this.form.desc
+          let userComment = this.form.yourName + '-' + this.form.position + this.form.desc
           // push the comments
           this.comments.push(userComment)
           

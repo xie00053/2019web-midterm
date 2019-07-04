@@ -2,7 +2,7 @@
   <div class="home">
     <h1>{{ msg }}</h1>
     <el-col :span="12">
-    <img alt="Vue logo" src="../assets/logo.png" />
+    <img alt="Vue logo" src="../assets/homevue.jpg" />
     </el-col>
     <el-col :span="12">
     <p>{{ homepageP1 }}</p>
@@ -28,7 +28,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.home {
+.home img {
+  width:90%;
 }
 
 </style>

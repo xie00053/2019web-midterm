@@ -8,13 +8,14 @@
       </el-col>
       <el-col :span="12">
         <h3>{{hourTitle}}</h3>
-        
-        <dt v-for="(value, name) in openHours" :key="name">{{name}} : {{value}}</dt>
-        
+        <!-- loop for open hours -->
+        <dt v-for="(value, name) in openHours" :key="name">{{name}} : {{value}}</dt>        
       </el-col>
     </el-row>
+    <p></p>
   </div>
 </template>
+
 
 <script>
 export default {
@@ -24,7 +25,7 @@ export default {
     return {
       title: 'Contact',
       addressName:'Address',
-      addressText:'1435 Woodroffe Avenue, Ottawa, Ontario.K2G1V8 613-7274723',
+      addressText:`1435 Woodroffe Avenue, Ottawa,Ontario. K2G1V8 613-7274723`,
       hourTitle:'Hours of Operation',
       openHours: {
         Monday:    '8AM-6PM',
@@ -41,3 +42,8 @@ export default {
   
 }
 </script>
+<style scoped>
+p {
+  width:50%;
+}
+</style>
