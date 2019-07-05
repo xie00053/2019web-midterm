@@ -3,10 +3,11 @@
 
     <!-- loop comments 将每次上传的comment打印到页面 -->
       <el-row :gutter="12" >
-        <el-col :span="12" v-for="(list,index) in comments" :key="index">
+        <el-col :span="12" v-for="(commentList,index) in comments" :key="index">
           <el-card shadow="always">  
-              <p><strong>{{list.Name}} - {{list.Position}}</strong></p>        
-              <p>{{list.Comment}}</p>
+            <!-- 这里的值必须和 obj 里定义的值一致-->
+              <p><strong>{{commentList.Name}} - {{commentList.Position}}</strong></p>        
+              <p>{{commentList.Comment}}</p>
           </el-card>
         </el-col>
       </el-row>
@@ -14,17 +15,19 @@
     <!-- the form start from here -->
     <div class="userForm">
       <el-form :model="form" :rules="rules" ref="form">
-        <h3>Leave us a testimonial</h3>
-        <el-row>          
+        <h3>{{formTitle}}</h3>
+        <el-row>  
+          <div class="userInfo">  
           <!-- First Name -->
-          <el-form-item prop="yourName">
-            <el-input placeholder="Your Name (no more than 50 words)" id="userName" v-model="form.yourName"></el-input>
-          </el-form-item>
-          
-          <!-- position Title -->
-          <el-form-item prop="position">
-            <el-input placeholder="Position Title (no more than 50 words)" id="userPosition" v-model="form.position"></el-input>
-          </el-form-item>
+            <el-form-item prop="yourName" id="userName">
+              <el-input placeholder="Your Name (no more than 50 words)"  v-model="form.yourName"></el-input>
+            </el-form-item>
+            
+            <!-- position Title -->
+            <el-form-item prop="position" id="userPosition">
+              <el-input placeholder="Position Title (no more than 50 words)" id="userPosition" v-model="form.position"></el-input>
+            </el-form-item>
+          </div> 
           
           <!-- Description -->
           <el-form-item prop="desc">
@@ -54,6 +57,8 @@ export default {
           desc: null,  
         },
 
+        formTitle: 'Leave us a testimonial',
+
         comments:[],
 
 
@@ -62,7 +67,7 @@ export default {
         // name, position title can not more than 30 words, comment desc can not more than 120 words.
         rules: {
           yourName:[
-            {required: true, message: 'Please input Frist Name', trigger: 'blur'},
+            {required: true, message: 'Please input First Name', trigger: 'blur'},
             { min:0, max: 50, message: 'You name cannot be more than 50 words', trigger: ['blur', 'change'] }
           ],
           position:[
@@ -85,25 +90,24 @@ export default {
       this.$refs[form].validate((valid) => {
         if (valid) { 
 
+          // this obj will add into the data
           let obj = {
              'Name': this.form.yourName,
              'Position': this.form.position,
              'Comment': this.form.desc,
           };
-          
-          // let userComment = this.form.yourName + ' - ' + this.form.position + ' : ' + this.form.desc
-          // push the comments
 
           
           // import axios to make api calls
           axios 
+
           // 链接到firebase，进入data.json, 加载comments, overwrite the date 
           .post("https://xie00053-vue-and-axios.firebaseio.com/data.json", JSON.stringify(obj))
           .then(response => {
               console.log(response);
               console.log("Your data was saved status:" + response.status)
 
-              // here we are making a GET request using AXIOS to get the data
+              // here we are making a GET request using AXIOS to get the data to finish the post function
               axios
                 .get("https://xie00053-vue-and-axios.firebaseio.com//data.json")
                 .then(response => {
@@ -139,6 +143,7 @@ export default {
   created() {
       
   // here we are making a GET request using AXIOS to get the data
+  // get the data and dispay on the browse
   axios
     .get("https://xie00053-vue-and-axios.firebaseio.com/data.json")
     .then(response => {
@@ -169,6 +174,20 @@ export default {
     margin-bottom: 1.5rem;
     background-color: #ffffff;
   }
+
+  .userInfo {
+    display: flex;
+  }
+
+  #userName{
+     width: 50% !important;
+     margin-right: 10px;
+  }
+
+  #userPosition{
+     width: 50% !important;
+  }
+
 </style>
 
 

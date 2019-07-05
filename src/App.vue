@@ -1,6 +1,8 @@
 <template>
   <el-container id="app">
+    
     <el-row id="nav">
+      <!-- the menu navigation -->
       <el-col :span="24">        
         <div class="grid-content bg-purple-light">
           <el-header>
@@ -12,20 +14,21 @@
           </el-header>         
         </div>
       </el-col>
-
+      
+      <!-- the main content -->
       <el-col :span="18" :offset="3">
           <el-main>
             <router-view />
           </el-main>
       </el-col>
     
-
+      <!-- the footer -->
       <el-col :span="24">
         <div class="grid-content bg-purple-light">
           <el-footer>{{footer}}</el-footer>
         </div>         
       </el-col>
-  </el-row>
+    </el-row>
     
   </el-container>
 </template>

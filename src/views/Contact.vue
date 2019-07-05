@@ -1,18 +1,25 @@
 <template>
+<!-- the Contact page -->
   <div class="contact">
+
     <h1>{{title}}</h1>
+
     <el-row>
+      <!-- colume for address -->
       <el-col :span="12">
         <h3>{{addressName}}</h3>
         <p>{{addressText}}</p>
       </el-col>
+      
+      <!-- colume for Open Hours -->
       <el-col :span="12">
         <h3>{{hourTitle}}</h3>
+
         <!-- loop for open hours -->
         <dt v-for="(value, name) in openHours" :key="name">{{name}} : {{value}}</dt>        
       </el-col>
+
     </el-row>
-    <p></p>
   </div>
 </template>
 
