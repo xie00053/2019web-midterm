@@ -2,8 +2,14 @@
   <div class="testimonials">
 
     <!-- loop comments 将每次上传的comment打印到页面 -->
-    <CommentLoop :commentsList="comments" @removeComment="appDeleteTodo"/>
-
+      <el-row :gutter="12" >
+        <el-col :span="12" v-for="(list,index) in comments" :key="index">
+          <el-card shadow="always">  
+              <p><strong>{{list.Name}} - {{list.Position}}</strong></p>        
+              <p>{{list.Comment}}</p>
+          </el-card>
+        </el-col>
+      </el-row>
 
     <!-- the form start from here -->
     <div class="userForm">
@@ -12,17 +18,17 @@
         <el-row>          
           <!-- First Name -->
           <el-form-item prop="yourName">
-            <el-input placeholder="Your Name (no more than 50 words)" v-model="form.yourName"></el-input>
+            <el-input placeholder="Your Name (no more than 50 words)" id="userName" v-model="form.yourName"></el-input>
           </el-form-item>
           
           <!-- position Title -->
           <el-form-item prop="position">
-            <el-input placeholder="Position Title (no more than 50 words)" v-model="form.position"></el-input>
+            <el-input placeholder="Position Title (no more than 50 words)" id="userPosition" v-model="form.position"></el-input>
           </el-form-item>
           
           <!-- Description -->
           <el-form-item prop="desc">
-            <el-input type="textarea" placeholder="Your Comments (no more than 50 words)" v-model="form.desc"></el-input>
+            <el-input type="textarea" placeholder="Your Comments (no more than 50 words)" id="userDesc" v-model="form.desc"></el-input>
           </el-form-item>
         </el-row>
       </el-form>
@@ -35,24 +41,21 @@
 </template>
 
 <script>
-// import component CommentLoop
-import CommentLoop from "@/components/CommentLoop.vue";
 import axios from 'axios'
 
 export default {
 
-  components: {
-    CommentLoop,
-  },
-
   data () {
-    return {    
+    return {
+          
         form: {
           yourName: null,
           position: null,
           desc: null,  
         },
+
         comments:[],
+
 
         // Rules for the form:--------
         // name, position, comment desc can not be empty;
@@ -76,31 +79,44 @@ export default {
 
 
   methods: {
-        
-    appDeleteTodo(index) {
-      // delete comment card
-      this.comments.splice(index, 1);
-        axios.put(
-        "https://vue-and-axios.firebaseio.com/data.json",
-        this.comments
-        );
-    },
+     
 
     submitForm(form) {
       this.$refs[form].validate((valid) => {
-        if (valid) {
-          let userComment = this.form.yourName + '-' + this.form.position + this.form.desc
+        if (valid) { 
+
+          let obj = {
+             'Name': this.form.yourName,
+             'Position': this.form.position,
+             'Comment': this.form.desc,
+          };
+          
+          // let userComment = this.form.yourName + ' - ' + this.form.position + ' : ' + this.form.desc
           // push the comments
-          this.comments.push(userComment)
+
           
           // import axios to make api calls
           axios 
-          // 链接到firebase，进入data.json, 加载comments
-          .put("https://xie00053-vue-and-axios.firebaseio.com/data.json", this.comments)
-          // 检测如果 .put 通过的话，运行.then
+          // 链接到firebase，进入data.json, 加载comments, overwrite the date 
+          .post("https://xie00053-vue-and-axios.firebaseio.com/data.json", JSON.stringify(obj))
           .then(response => {
               console.log(response);
               console.log("Your data was saved status:" + response.status)
+
+              // here we are making a GET request using AXIOS to get the data
+              axios
+                .get("https://xie00053-vue-and-axios.firebaseio.com//data.json")
+                .then(response => {
+                  // console.log(response);
+                  console.log(response.data);
+                  // Checking if the response has some data
+                  if (response.data) {
+                    this.comments = response.data;
+                  }
+                })
+                .catch(error => {
+                  console.log("There was an error in getting data: " + error.response);
+                });
           })
 
           // 检测如果 .put 没有通过的话，运行.catch
@@ -124,14 +140,14 @@ export default {
       
   // here we are making a GET request using AXIOS to get the data
   axios
-    .get("https://xie00053-vue-and-axios.firebaseio.com//data.json")
+    .get("https://xie00053-vue-and-axios.firebaseio.com/data.json")
     .then(response => {
       // console.log(response);
-      // console.log(response.data);
+       console.log(response.data);
       // Checking if the response has some data
       if (response.data) {
         this.comments = response.data;
-      }
+}
     })
     .catch(error => {
       console.log("There was an error in getting data: " + error.response);

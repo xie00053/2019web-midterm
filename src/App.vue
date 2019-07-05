@@ -9,8 +9,7 @@
             <router-link to="/about">About</router-link>
             <router-link to="/contact">Contact</router-link>
             <router-link to="/testimonials">Testimoninals</router-link>   
-          </el-header>
-          
+          </el-header>         
         </div>
       </el-col>
 
@@ -23,7 +22,7 @@
 
       <el-col :span="24">
         <div class="grid-content bg-purple-light">
-          <el-footer>Copyright, MIT Open lience.</el-footer>
+          <el-footer>{{footer}}</el-footer>
         </div>         
       </el-col>
   </el-row>
@@ -38,6 +37,7 @@ export default {
   data () {
     return {
       title: 'My Vue App',
+      footer: 'Copyright, MIT Open lience.',
     }
   },
 
